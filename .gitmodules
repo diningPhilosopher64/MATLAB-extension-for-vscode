@@ -1,3 +1,6 @@
 [submodule "syntaxes"]
 	path = syntaxes
 	url = https://github.com/mathworks/MATLAB-Language-grammar
+[submodule "server"]
+	path = server
+	url = git@github.mathworks.com:development/matlab-language-server.git
