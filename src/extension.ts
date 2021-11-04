@@ -1,13 +1,50 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+import * as path from 'path'
 import * as vscode from 'vscode'
+import {
+    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
+} from 'vscode-languageclient/node'
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+let client: LanguageClient
+
 export function activate (context: vscode.ExtensionContext) {
-    // Use the console to output diagnostic information (console.log) and errors (console.error)
-    // This line of code will only be executed once when your extension is activated
-    console.log('Congratulations, your extension "language-matlab" is now active!')
+    const serverModule: string = context.asAbsolutePath(
+        path.join('server', 'out', 'server.js')
+    )
+
+    const serverOptions: ServerOptions = {
+        run: {
+            module: serverModule,
+            transport: TransportKind.ipc,
+            args: []
+        },
+        debug: {
+            module: serverModule,
+            transport: TransportKind.ipc,
+            options: {
+                // --inspect=6009: runs the server in Node's Inspector mode so VS Code can
+                // attach to the server for debugging
+                execArgv: ['--nolazy', '--inspect=6009']
+            },
+            args: []
+        }
+    }
+
+    // Options to control the language client
+    const clientOptions: LanguageClientOptions = {
+        // Register the server for plain text documents
+        documentSelector: [{ scheme: 'file', language: 'matlab' }]
+    }
+
+    // Create and start the language client
+    client = new LanguageClient(
+        'matlabls',
+        'MATLAB Language Server',
+        serverOptions,
+        clientOptions
+    )
+
+    const clientDisposable = client.start()
+    context.subscriptions.push(clientDisposable)
 }
 
 // this method is called when your extension is deactivated
