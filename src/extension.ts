@@ -11,11 +11,13 @@ export function activate (context: vscode.ExtensionContext) {
         path.join('server', 'out', 'server.js')
     )
 
+    const args = [`--matlabCertDir=${context.storageUri?.fsPath}`]
+
     const serverOptions: ServerOptions = {
         run: {
             module: serverModule,
             transport: TransportKind.ipc,
-            args: []
+            args
         },
         debug: {
             module: serverModule,
@@ -25,7 +27,7 @@ export function activate (context: vscode.ExtensionContext) {
                 // attach to the server for debugging
                 execArgv: ['--nolazy', '--inspect=6009']
             },
-            args: []
+            args
         }
     }
 
