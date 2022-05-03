@@ -6,12 +6,30 @@ import {
 
 let client: LanguageClient
 
+const CONNECTION_STATUS_LABELS = {
+    CONNECTED: 'MATLAB: Connected',
+    NOT_CONNECTED: 'MATLAB: Not Connected',
+    CONNECTING: 'MATLAB: Establishing Connection'
+}
+const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
+let connectionStatusNotification: vscode.StatusBarItem
+
 export function activate (context: vscode.ExtensionContext) {
+    // Set up status bar indicator
+    connectionStatusNotification = vscode.window.createStatusBarItem()
+    connectionStatusNotification.text = CONNECTION_STATUS_LABELS.NOT_CONNECTED
+    connectionStatusNotification.command = CONNECTION_STATUS_COMMAND
+    connectionStatusNotification.show()
+    context.subscriptions.push(connectionStatusNotification)
+
+    context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_STATUS_COMMAND, () => handleChangeMatlabConnection()))
+
+    // Set up langauge server
     const serverModule: string = context.asAbsolutePath(
         path.join('server', 'out', 'server.js')
     )
 
-    const args = [`--matlabCertDir=${context.storageUri?.fsPath}`]
+    const args = getServerArgs(context)
 
     const serverOptions: ServerOptions = {
         run: {
@@ -47,6 +65,52 @@ export function activate (context: vscode.ExtensionContext) {
 
     const clientDisposable = client.start()
     context.subscriptions.push(clientDisposable)
+
+    client.onReady().then(() => {
+        client.onNotification('matlab/connectionStatusChange', data => handleConnectionStatusChange(data))
+    })
+}
+
+function handleChangeMatlabConnection () {
+    vscode.window.showQuickPick(['Connect to MATLAB', 'Disconnect from MATLAB'], {
+        placeHolder: 'Change MATLAB Connection'
+    }).then(choice => {
+        if (!choice) {
+            return
+        }
+
+        let connectionAction: string = ''
+        if (choice === 'Connect to MATLAB') {
+            connectionAction = 'connect'
+        } else if (choice === 'Disconnect from MATLAB') {
+            connectionAction = 'disconnect'
+        }
+
+        client.sendNotification('matlab/updateConnection', {
+            connectionAction
+        })
+    })
+}
+
+function handleConnectionStatusChange (data: { connectionStatus: string }) {
+    if (data.connectionStatus === 'connected') {
+        connectionStatusNotification.text = CONNECTION_STATUS_LABELS.CONNECTED
+    } else if (data.connectionStatus === 'disconnected') {
+        connectionStatusNotification.text = CONNECTION_STATUS_LABELS.NOT_CONNECTED
+    } else if (data.connectionStatus === 'connecting') {
+        connectionStatusNotification.text = CONNECTION_STATUS_LABELS.CONNECTING
+    }
+}
+
+function getServerArgs (context: vscode.ExtensionContext): string[] {
+    const configuration = vscode.workspace.getConfiguration('matlab')
+    const args = [
+        `--matlabCertDir=${context.storageUri?.fsPath}`,
+        `--matlabInstallPath=${configuration.get<string>('installPath')}`,
+        `--matlabConnectionTiming=${configuration.get<string>('launchMatlab')}`
+    ]
+
+    return args
 }
 
 // this method is called when your extension is deactivated

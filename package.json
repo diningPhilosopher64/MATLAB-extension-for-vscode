@@ -15,6 +15,34 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+        "commands": [
+            {
+                "command": "matlab.changeMatlabConnection",
+                "title": "MATLAB: Change MATLAB Connection"
+            }
+        ],
+        "configuration": {
+            "title": "MATLAB",
+            "properties": {
+                "matlab.installPath": {
+                    "type": "string",
+                    "markdownDescription": "The full path to the top-level directory of the MATLAB installation. If not specified, the environment path will be checked for the location of the `matlab` executable.",
+                    "scope": "machine"
+                },
+                "matlab.launchMatlab": {
+                    "type": "string",
+                    "default": "early",
+                    "description": "When should MATLAB be launched",
+                    "enum": ["early", "late", "never"],
+                    "enumDescriptions": [
+                        "Launch MATLAB as early as possible",
+                        "Launch MATLAB only when requested",
+                        "Never attempt to launch MATLAB"
+                    ],
+                    "scope": "window"
+                }
+            }
+        },
 		"languages": [
 			{
 				"id": "matlab",
