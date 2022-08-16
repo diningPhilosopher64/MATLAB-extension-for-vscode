@@ -110,6 +110,10 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
         `--matlabConnectionTiming=${configuration.get<string>('launchMatlab')}`
     ]
 
+    if (configuration.get<boolean>('indexWorkspace')) {
+        args.push('--indexWorkspace')
+    }
+
     return args
 }
 
