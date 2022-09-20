@@ -1,5 +1,6 @@
 {
 	"name": "language-matlab",
+    "license": "XSLA",
 	"displayName": "MATLAB Support in VS Code",
 	"description": "MATLAB Language Support",
 	"version": "0.0.1",
