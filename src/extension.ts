@@ -14,7 +14,7 @@ const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 let connectionStatusNotification: vscode.StatusBarItem
 
-export function activate (context: vscode.ExtensionContext) {
+export function activate (context: vscode.ExtensionContext): void {
     // Set up status bar indicator
     connectionStatusNotification = vscode.window.createStatusBarItem()
     connectionStatusNotification.text = CONNECTION_STATUS_LABELS.NOT_CONNECTED
@@ -26,7 +26,7 @@ export function activate (context: vscode.ExtensionContext) {
 
     // Set up langauge server
     const serverModule: string = context.asAbsolutePath(
-        path.join('server', 'out', 'server.js')
+        path.join('server', 'out', 'index.js')
     )
 
     const args = getServerArgs(context)
@@ -66,20 +66,20 @@ export function activate (context: vscode.ExtensionContext) {
     const clientDisposable = client.start()
     context.subscriptions.push(clientDisposable)
 
-    client.onReady().then(() => {
+    void client.onReady().then(() => {
         client.onNotification('matlab/connectionStatusChange', data => handleConnectionStatusChange(data))
     })
 }
 
-function handleChangeMatlabConnection () {
-    vscode.window.showQuickPick(['Connect to MATLAB', 'Disconnect from MATLAB'], {
+function handleChangeMatlabConnection (): void {
+    void vscode.window.showQuickPick(['Connect to MATLAB', 'Disconnect from MATLAB'], {
         placeHolder: 'Change MATLAB Connection'
     }).then(choice => {
-        if (!choice) {
+        if (choice == null) {
             return
         }
 
-        let connectionAction: string = ''
+        let connectionAction = ''
         if (choice === 'Connect to MATLAB') {
             connectionAction = 'connect'
         } else if (choice === 'Disconnect from MATLAB') {
@@ -92,7 +92,7 @@ function handleChangeMatlabConnection () {
     })
 }
 
-function handleConnectionStatusChange (data: { connectionStatus: string }) {
+function handleConnectionStatusChange (data: { connectionStatus: string }): void {
     if (data.connectionStatus === 'connected') {
         connectionStatusNotification.text = CONNECTION_STATUS_LABELS.CONNECTED
     } else if (data.connectionStatus === 'disconnected') {
@@ -105,12 +105,12 @@ function handleConnectionStatusChange (data: { connectionStatus: string }) {
 function getServerArgs (context: vscode.ExtensionContext): string[] {
     const configuration = vscode.workspace.getConfiguration('matlab')
     const args = [
-        `--matlabCertDir=${context.storageUri?.fsPath}`,
-        `--matlabInstallPath=${configuration.get<string>('installPath')}`,
-        `--matlabConnectionTiming=${configuration.get<string>('launchMatlab')}`
+        `--matlabCertDir=${context.storageUri?.fsPath ?? ''}`,
+        `--matlabInstallPath=${configuration.get<string>('installPath') ?? ''}`,
+        `--matlabConnectionTiming=${configuration.get<string>('launchMatlab') ?? 'early'}`
     ]
 
-    if (configuration.get<boolean>('indexWorkspace')) {
+    if (configuration.get<boolean>('indexWorkspace') ?? false) {
         args.push('--indexWorkspace')
     }
 
@@ -118,4 +118,4 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate () { }
+// export function deactivate () { }
