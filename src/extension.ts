@@ -14,7 +14,7 @@ const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 let connectionStatusNotification: vscode.StatusBarItem
 
-export function activate (context: vscode.ExtensionContext): void {
+export async function activate (context: vscode.ExtensionContext): Promise<void> {
     // Set up status bar indicator
     connectionStatusNotification = vscode.window.createStatusBarItem()
     connectionStatusNotification.text = CONNECTION_STATUS_LABELS.NOT_CONNECTED
@@ -63,12 +63,9 @@ export function activate (context: vscode.ExtensionContext): void {
         clientOptions
     )
 
-    const clientDisposable = client.start()
-    context.subscriptions.push(clientDisposable)
+    client.onNotification('matlab/connectionStatusChange', data => handleConnectionStatusChange(data))
 
-    void client.onReady().then(() => {
-        client.onNotification('matlab/connectionStatusChange', data => handleConnectionStatusChange(data))
-    })
+    await client.start()
 }
 
 function handleChangeMatlabConnection (): void {
@@ -118,4 +115,7 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
 }
 
 // this method is called when your extension is deactivated
-// export function deactivate () { }
+export async function deactivate (): Promise<void> {
+    await client.stop()
+    client.dispose()
+}
