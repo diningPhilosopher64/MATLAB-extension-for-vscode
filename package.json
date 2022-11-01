@@ -1,11 +1,11 @@
 {
 	"name": "language-matlab",
 	"license": "XSLA",
-	"displayName": "MATLAB Support in VS Code",
-	"description": "MATLAB Language Support",
-	"version": "0.0.1",
+	"displayName": "MATLAB",
+	"description": "Edit MATLAB code with syntax highlighting, linting, navigation support, and more",
+	"version": "0.0.3",
 	"engines": {
-		"vscode": "^1.61.0"
+		"vscode": "^1.71.0"
 	},
 	"categories": [
 		"Programming Languages",

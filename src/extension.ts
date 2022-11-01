@@ -83,7 +83,7 @@ function handleChangeMatlabConnection (): void {
             connectionAction = 'disconnect'
         }
 
-        client.sendNotification('matlab/updateConnection', {
+        void client.sendNotification('matlab/updateConnection', {
             connectionAction
         })
     })
@@ -117,5 +117,5 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
 // this method is called when your extension is deactivated
 export async function deactivate (): Promise<void> {
     await client.stop()
-    client.dispose()
+    void client.dispose()
 }

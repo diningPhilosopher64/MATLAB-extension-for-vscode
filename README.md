@@ -1,6 +1,6 @@
-# language-matlab README
+# MATLAB extension fo Visual Studio Code
 
-This is the README for your extension "language-matlab". After writing up a brief description, we recommend including the following sections.
+**This README is still to-do**
 
 ## Features
 
