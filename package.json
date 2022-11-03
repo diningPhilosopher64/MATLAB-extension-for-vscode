@@ -7,6 +7,7 @@
 	"engines": {
 		"vscode": "^1.71.0"
 	},
+    "publisher": "The MathWorks, Inc.",
 	"categories": [
 		"Programming Languages",
 		"Snippets"
