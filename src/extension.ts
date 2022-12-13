@@ -18,6 +18,17 @@ const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 let connectionStatusNotification: vscode.StatusBarItem
 
+enum Notification {
+    // Connection Status Updates
+    MatlabConnectionClientUpdate = 'matlab/connection/update/client',
+    MatlabConnectionServerUpdate = 'matlab/connection/update/server',
+
+    // Errors
+    MatlabLaunchFailed = 'matlab/launchfailed',
+    MatlabFeatureUnavailable = 'feature/needsmatlab',
+    MatlabFeatureUnavailableNoMatlab = 'feature/needsmatlab/nomatlab'
+}
+
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
     // Set up status bar indicator
     connectionStatusNotification = vscode.window.createStatusBarItem()
@@ -68,10 +79,10 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     )
 
     // Set up notification listeners
-    client.onNotification('matlab/connection/update/server', data => handleConnectionStatusChange(data))
-    client.onNotification('matlab/launchfailed', () => handleMatlabLaunchFailed())
-    client.onNotification('feature/needsmatlab', () => handleFeatureUnavailable())
-    client.onNotification('feature/needsmatlab/nomatlab', () => handleFeatureUnavailableWithNoMatlab())
+    client.onNotification(Notification.MatlabConnectionServerUpdate, data => handleConnectionStatusChange(data))
+    client.onNotification(Notification.MatlabLaunchFailed, () => handleMatlabLaunchFailed())
+    client.onNotification(Notification.MatlabFeatureUnavailable, () => handleFeatureUnavailable())
+    client.onNotification(Notification.MatlabFeatureUnavailableNoMatlab, () => handleFeatureUnavailableWithNoMatlab())
 
     await client.start()
 }
@@ -208,7 +219,7 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
  * @param connectionAction The action - either 'connect' or 'disconnect'
  */
 function sendConnectionActionNotification (connectionAction: 'connect' | 'disconnect'): void {
-    void client.sendNotification('matlab/connection/update/client', {
+    void client.sendNotification(Notification.MatlabConnectionClientUpdate, {
         connectionAction
     })
 }
