@@ -1,13 +1,20 @@
 {
 	"name": "language-matlab",
-	"license": "XSLA",
 	"displayName": "MATLAB",
 	"description": "Edit MATLAB code with syntax highlighting, linting, navigation support, and more",
+    "icon": "public/L-Membrane_RGB_128x128.png",
+	"license": "XSLA",
 	"version": "0.0.3",
 	"engines": {
 		"vscode": "^1.71.0"
 	},
-    "publisher": "The MathWorks, Inc.",
+    "publisher": "MathWorks",
+    "author": {
+        "name": "The MathWorks, Inc."
+    },
+    "repository": {
+        "url": "https://github.com/mathworks/matlab-vscode"
+    },
 	"categories": [
 		"Programming Languages",
 		"Snippets"
@@ -31,7 +38,7 @@
 					"markdownDescription": "The full path to the top-level directory of the MATLAB installation. If not specified, the environment path will be checked for the location of the `matlab` executable.",
 					"scope": "machine"
 				},
-				"matlab.launchMatlab": {
+				"matlab.matlabConnectionTiming": {
 					"type": "string",
 					"default": "early",
 					"description": "When should MATLAB be launched",
