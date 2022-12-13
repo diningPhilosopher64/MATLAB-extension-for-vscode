@@ -7,6 +7,9 @@ import NotificationConstants from './NotificationConstants'
 
 let client: LanguageClient
 
+const OPEN_SETTINGS_ACTION = 'workbench.action.openSettings'
+const MATLAB_INSTALL_PATH_SETTING = 'matlab.installPath'
+
 const CONNECTION_STATUS_LABELS = {
     CONNECTED: 'MATLAB: Connected',
     NOT_CONNECTED: 'MATLAB: Not Connected',
@@ -85,9 +88,9 @@ function handleChangeMatlabConnection (): void {
         }
 
         if (choice === 'Connect to MATLAB') {
-            connectToMatlab()
+            sendConnectionActionNotification('connect')
         } else if (choice === 'Disconnect from MATLAB') {
-            disconnectFromMatlab()
+            sendConnectionActionNotification('disconnect')
         }
     })
 }
@@ -107,10 +110,9 @@ function handleConnectionStatusChange (data: { connectionStatus: string }): void
             const options = NotificationConstants.MATLAB_CLOSED.options
             vscode.window.showWarningMessage(message, ...options
             ).then(choice => {
-                switch (choice) {
-                    case options[0]: // Restart MATLAB
-                        connectToMatlab()
-                        break
+                if (choice != null) {
+                    // Selected to restart MATLAB
+                    sendConnectionActionNotification('connect')
                 }
             }, reject => console.error(reject))
         }
@@ -135,7 +137,7 @@ function handleMatlabLaunchFailed (): void {
                 void vscode.env.openExternal(vscode.Uri.parse(url))
                 break
             case options[1]: // Open Settings
-                void vscode.commands.executeCommand('workbench.action.openSettings', 'matlab.installPath')
+                void vscode.commands.executeCommand(OPEN_SETTINGS_ACTION, MATLAB_INSTALL_PATH_SETTING)
                 break
         }
     }, reject => console.error(reject))
@@ -152,10 +154,9 @@ function handleFeatureUnavailable (): void {
         message,
         ...options
     ).then(choice => {
-        switch (choice) {
-            case options[0]: // Start MATLAB
-                connectToMatlab()
-                break
+        if (choice != null) {
+            // Selected to start MATLAB
+            sendConnectionActionNotification('connect')
         }
     }, reject => console.error(reject))
 }
@@ -175,7 +176,7 @@ function handleFeatureUnavailableWithNoMatlab (): void {
                 void vscode.env.openExternal(vscode.Uri.parse(url))
                 break
             case options[1]: // Open Settings
-                void vscode.commands.executeCommand('workbench.action.openSettings', 'matlab.installPath')
+                void vscode.commands.executeCommand(OPEN_SETTINGS_ACTION, MATLAB_INSTALL_PATH_SETTING)
                 break
         }
     }, reject => console.error(reject))
@@ -203,20 +204,12 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
 }
 
 /**
- * Sends notification to language server to instruct it to connect to MATLAB
+ * Sends notification to language server to instruct it to either connect to or disconnect from MATLAB.
+ * @param connectionAction The action - either 'connect' or 'disconnect'
  */
-function connectToMatlab (): void {
+function sendConnectionActionNotification (connectionAction: 'connect' | 'disconnect'): void {
     void client.sendNotification('matlab/connection/update/client', {
-        connectionAction: 'connect'
-    })
-}
-
-/**
- * Sends notification to language server to instruct it to disconnect from MATLAB
- */
-function disconnectFromMatlab (): void {
-    void client.sendNotification('matlab/connection/update/client', {
-        connectionAction: 'disconnect'
+        connectionAction
     })
 }
 
