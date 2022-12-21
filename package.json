@@ -4,7 +4,7 @@
 	"description": "Edit MATLAB code with syntax highlighting, linting, navigation support, and more",
     "icon": "public/L-Membrane_RGB_128x128.png",
 	"license": "XSLA",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.71.0"
 	},
@@ -35,7 +35,7 @@
 			"properties": {
 				"matlab.installPath": {
 					"type": "string",
-					"markdownDescription": "The full path to the top-level directory of the MATLAB installation. If not specified, the environment path will be checked for the location of the `matlab` executable.",
+					"markdownDescription": "The full path to the top-level directory of the MATLAB installation, e.g. `C:\\Program Files\\MATLAB\\R2022b` (Windows), `/Applications/MATLAB_R2022b.app` (Mac), or `/usr/local/MATLAB/R2022b` (Linux). If not specified, the environment path will be checked for the location of the `matlab` executable.",
 					"scope": "machine"
 				},
 				"matlab.matlabConnectionTiming": {
