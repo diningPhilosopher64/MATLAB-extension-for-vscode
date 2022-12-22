@@ -4,9 +4,23 @@ out/test/**
 
 src/**
 .gitignore
+.gitmodules
 .yarnrc
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+syntaxes/.vscode/**
+syntaxes/test/**
+syntaxes/*.m
+syntaxes/.travis.yml
+syntaxes/.git
+syntaxes/.gitignore
+
+server/.eslintrc
+server/.git
+server/.gitattributes
+server/.gitignore
+server/webpack.config.js

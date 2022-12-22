@@ -2,19 +2,19 @@
 	"name": "language-matlab",
 	"displayName": "MATLAB",
 	"description": "Edit MATLAB code with syntax highlighting, linting, navigation support, and more",
-    "icon": "public/L-Membrane_RGB_128x128.png",
+	"icon": "public/L-Membrane_RGB_128x128.png",
 	"license": "XSLA",
 	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.71.0"
 	},
-    "publisher": "MathWorks",
-    "author": {
-        "name": "The MathWorks, Inc."
-    },
-    "repository": {
-        "url": "https://github.com/mathworks/matlab-vscode"
-    },
+	"publisher": "MathWorks",
+	"author": {
+		"name": "The MathWorks, Inc."
+	},
+	"repository": {
+		"url": "https://github.com/mathworks/matlab-vscode"
+	},
 	"categories": [
 		"Programming Languages",
 		"Snippets"
@@ -90,7 +90,7 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "npm run compile && cd server && npm prune --production && cd ..",
 		"compile": "tsc -p ./ && cd server && npm run compile && cd ..",
 		"watch": "tsc -watch -p ./ && cd server && npm run watch && cd ..",
 		"pretest": "npm run compile && npm run lint",
