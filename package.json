@@ -6,7 +6,7 @@
 	"license": "XSLA",
 	"version": "0.0.5",
 	"engines": {
-		"vscode": "^1.71.0"
+		"vscode": "^1.67.0"
 	},
 	"publisher": "MathWorks",
 	"author": {
@@ -101,24 +101,24 @@
 		"package": "vsce package"
 	},
 	"devDependencies": {
-		"@types/glob": "8.0.0",
-		"@types/mocha": "9.1.1",
-		"@types/node": "18.7.18",
-		"@types/vscode": "1.71.0",
-		"@typescript-eslint/eslint-plugin": "5.36.1",
-		"@typescript-eslint/parser": "5.36.1",
-		"@vscode/test-electron": "2.1.5",
-		"eslint": "8.23.0",
-		"eslint-config-standard-with-typescript": "22.0.0",
-		"eslint-plugin-import": "2.26.0",
-		"eslint-plugin-node": "11.1.0",
-		"eslint-plugin-promise": "6.0.1",
-		"glob": "8.0.3",
-		"mocha": "10.0.0",
-		"typescript": "4.8.3",
-		"vsce": "2.11.0"
+		"@types/glob": "^8.0.0",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "^18.7.18",
+		"@types/vscode": "^1.67.0",
+		"@typescript-eslint/eslint-plugin": "^5.36.1",
+		"@typescript-eslint/parser": "^5.36.1",
+		"@vscode/test-electron": "^2.1.5",
+		"eslint": "^8.23.0",
+		"eslint-config-standard-with-typescript": "^22.0.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^6.0.1",
+		"glob": "^8.0.3",
+		"mocha": "^10.0.0",
+		"typescript": "^4.8.3",
+		"vsce": "^2.11.0"
 	},
 	"dependencies": {
-		"vscode-languageclient": "8.0.2"
+		"vscode-languageclient": "^8.0.2"
 	}
 }
