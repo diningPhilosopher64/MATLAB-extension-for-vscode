@@ -1,3 +1,5 @@
+// Copyright 2022 - 2023 The MathWorks, Inc.
+
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {
