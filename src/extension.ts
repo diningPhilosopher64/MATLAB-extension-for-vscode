@@ -6,6 +6,7 @@ import {
     LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient/node'
 import NotificationConstants from './NotificationConstants'
+import TelemetryLogger, { TelemetryEvent } from './telemetry/TelemetryLogger'
 
 let client: LanguageClient
 
@@ -20,6 +21,8 @@ const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 let connectionStatusNotification: vscode.StatusBarItem
 
+let telemetryLogger: TelemetryLogger
+
 enum Notification {
     // Connection Status Updates
     MatlabConnectionClientUpdate = 'matlab/connection/update/client',
@@ -28,10 +31,16 @@ enum Notification {
     // Errors
     MatlabLaunchFailed = 'matlab/launchfailed',
     MatlabFeatureUnavailable = 'feature/needsmatlab',
-    MatlabFeatureUnavailableNoMatlab = 'feature/needsmatlab/nomatlab'
+    MatlabFeatureUnavailableNoMatlab = 'feature/needsmatlab/nomatlab',
+
+    // Telemetry
+    LogTelemetryData = 'telemetry/logdata'
 }
 
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
+    // Initialize telemetry logger
+    telemetryLogger = new TelemetryLogger(context.extension.packageJSON.version)
+
     // Set up status bar indicator
     connectionStatusNotification = vscode.window.createStatusBarItem()
     connectionStatusNotification.text = CONNECTION_STATUS_LABELS.NOT_CONNECTED
@@ -85,6 +94,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     client.onNotification(Notification.MatlabLaunchFailed, () => handleMatlabLaunchFailed())
     client.onNotification(Notification.MatlabFeatureUnavailable, () => handleFeatureUnavailable())
     client.onNotification(Notification.MatlabFeatureUnavailableNoMatlab, () => handleFeatureUnavailableWithNoMatlab())
+    client.onNotification(Notification.LogTelemetryData, data => handleTelemetryReceived(data))
 
     await client.start()
 }
@@ -193,6 +203,10 @@ function handleFeatureUnavailableWithNoMatlab (): void {
                 break
         }
     }, reject => console.error(reject))
+}
+
+function handleTelemetryReceived (event: TelemetryEvent): void {
+    telemetryLogger.sendEvent(event)
 }
 
 /**
