@@ -1,5 +1,5 @@
 # MATLAB extension for Visual Studio Code
-This extension provides support for editing MATLAB&reg; code in Microsoft&reg; Visual Studio&reg; Code and includes features such as syntax highlighting, code analysis, navigation support, and more. 
+This extension provides support for editing MATLAB&reg; code in Visual Studio&reg; Code and includes features such as syntax highlighting, code analysis, navigation support, and more. 
 
 You can use this extension with or without MATLAB installed on your system. However, to make use of the advanced code-editing features of the extension, you must have MATLAB R2021a or later installed. For more information, see the **Get Started** section.
 
@@ -31,7 +31,9 @@ If you have MATLAB R2021a or later installed on your system, you have access to 
 To configure the extension, go to the extension settings and select from the available options.
 
 ### MATLAB Install Path Setting
-If you have MATLAB installed on your system, the extension automatically checks the system path for the location of the MATLAB executable. If the MATLAB executable is not on the system path, you may need to manually set the `matlab.installPath` setting to the full path of your MATLAB installation. You can determine the full path of your MATLAB installation by using the `matlabroot` command in MATLAB. 
+If you have MATLAB installed on your system, the extension automatically checks the system path for the location of the MATLAB executable. If the MATLAB executable is not on the system path, you may need to manually set the `matlab.installPath` setting to the full path of your MATLAB installation. For example, `C:\Program Files\MATLAB\R2022b` (Windows&reg;), `/Applications/MATLAB_R2022b.app` (macOS), or `/usr/local/MATLAB/R2022b` (Linux&reg;).
+
+You can determine the full path of your MATLAB installation by using the `matlabroot` command in MATLAB. 
 
 For example, run the `matlabroot` command in the MATLAB Command Window.
 ```
@@ -42,7 +44,7 @@ ans =
 ```
 In the extension settings, set the `matlab.installPath` setting to the value returned by the `matlabroot` command.
 ```
-matlab.installPath = C:\Program Files\MATLAB\R2022b
+matlab.installPath = "C:\Program Files\MATLAB\R2022b"
 ```
 
 ### MATLAB Index Workspace Setting
@@ -67,11 +69,12 @@ If the MATLAB install path is not properly configured, you get an error when you
 
 To resolve the error, set the MATLAB install path to the location of the MATLAB executable. For more information, see the **Configuration > MATLAB Install Path Setting** section above.
 
-## Feedback
+## Contact Us
 We encourage all feedback. If you encounter a technical issue or have an enhancement request, create an issue here or contact MathWorks at support@mathworks.com.
 
 ## Release Notes
 
 ### 1.0.0
+Release date: *date*
 
-Initial release of MATLAB extension for Visual Studio Code
+* Initial release.
