@@ -13,13 +13,13 @@ let client: LanguageClient
 const OPEN_SETTINGS_ACTION = 'workbench.action.openSettings'
 const MATLAB_INSTALL_PATH_SETTING = 'matlab.installPath'
 
-const CONNECTION_STATUS_LABELS = {
+export const CONNECTION_STATUS_LABELS = {
     CONNECTED: 'MATLAB: Connected',
     NOT_CONNECTED: 'MATLAB: Not Connected',
     CONNECTING: 'MATLAB: Establishing Connection'
 }
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
-let connectionStatusNotification: vscode.StatusBarItem
+export let connectionStatusNotification: vscode.StatusBarItem
 
 let telemetryLogger: TelemetryLogger
 
@@ -251,7 +251,7 @@ function getServerArgs (context: vscode.ExtensionContext): string[] {
  * Sends notification to language server to instruct it to either connect to or disconnect from MATLAB.
  * @param connectionAction The action - either 'connect' or 'disconnect'
  */
-function sendConnectionActionNotification (connectionAction: 'connect' | 'disconnect'): void {
+export function sendConnectionActionNotification (connectionAction: 'connect' | 'disconnect'): void {
     void client.sendNotification(Notification.MatlabConnectionClientUpdate, {
         connectionAction
     })
