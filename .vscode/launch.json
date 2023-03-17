@@ -25,7 +25,7 @@
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
 			],
-			"env": {"test": "connection/newBuffer.test.js"}, //specify the test file to run
+			"env": {"test": "connection/newBuffer.test.js"},
 			"outFiles": [
 				"${workspaceFolder}/out/test/**/*.js"
 			],
