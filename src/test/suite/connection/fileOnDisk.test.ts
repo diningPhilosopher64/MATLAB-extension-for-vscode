@@ -8,7 +8,7 @@ suite('Connection Smoke Tests - File On Disk', () => {
         await vs.closeAllDocuments()
     })
 
-    test('MALTAB should connect on opening a file from disk', async () => {
+    test('MATLAB should connect on opening a file from disk', async () => {
         await vs.openDocument('hScript1.m')
         await vs.assertMATLABConnected()
         // test format action to verify the connection is working
