@@ -40,6 +40,15 @@ enum Notification {
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
     // Initialize telemetry logger
     telemetryLogger = new TelemetryLogger(context.extension.packageJSON.version)
+    telemetryLogger.sendEvent({
+        eventKey: 'ML_VS_CODE_ENVIRONMENT',
+        data: {
+            machine_hash: vscode.env.machineId,
+            locale: vscode.env.language,
+            os_platform: process.platform,
+            vs_code_version: vscode.version
+        }
+    })
 
     // Set up status bar indicator
     connectionStatusNotification = vscode.window.createStatusBarItem()
@@ -206,6 +215,7 @@ function handleFeatureUnavailableWithNoMatlab (): void {
 }
 
 function handleTelemetryReceived (event: TelemetryEvent): void {
+    event.eventKey = `ML_VS_CODE_${event.eventKey}`
     telemetryLogger.sendEvent(event)
 }
 

@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import { env, workspace } from 'vscode'
 
 const PRODUCT = 'ML_VS_CODE'
-const APPLICATION_NAME = 'MATLAB_EXTENSION_FOR_VSCODE'
+const APPLICATION_NAME = 'DESKTOP_MATLAB' // TODO: Replace with 'MATLAB_EXTENSION_FOR_VSCODE'
 const APPLICATION_KEY = 'd8c22ba3-fc0f-4beb-99fc-a109fe9abba9' // TODO: Replace with key for our application - this is the DESKTOP_MATLAB key
 
 const ENDPOINT = 'https://udc-service-integ3.mathworks.com/udc/service/v1/events' // TODO: Replace with production endpoint
