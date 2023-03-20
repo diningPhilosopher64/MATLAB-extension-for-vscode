@@ -144,6 +144,13 @@ function handleConnectionStatusChange (data: { connectionStatus: string }): void
             ).then(choice => {
                 if (choice != null) {
                     // Selected to restart MATLAB
+                    telemetryLogger.sendEvent({
+                        eventKey: 'ML_VS_CODE_SETTING_ACTIONS',
+                        data: {
+                            action_type: 'restartMATLAB',
+                            result: ''
+                        }
+                    })
                     sendConnectionActionNotification('connect')
                 }
             }, reject => console.error(reject))
