@@ -60,10 +60,10 @@ export default class TelemetryLogger {
             body: JSON.stringify(message)
         }).then(response => {
             if (!response.ok) {
-                console.log(`Warning: Telemetry post failed, code = ${response.status} (${response.statusText})`)
+                console.error(`Telemetry post failed, code = ${response.status} (${response.statusText})`)
             }
         }).catch(error => {
-            console.log('WARNING: Telemetry post error: ', error)
+            console.error('Telemetry post error: ', error)
         })
     }
 
