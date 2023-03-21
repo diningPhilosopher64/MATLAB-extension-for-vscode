@@ -40,7 +40,7 @@ enum Notification {
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
     // Initialize telemetry logger
     telemetryLogger = new TelemetryLogger(context.extension.packageJSON.version)
-    telemetryLogger.sendEvent({
+    telemetryLogger.logEvent({
         eventKey: 'ML_VS_CODE_ENVIRONMENT',
         data: {
             machine_hash: vscode.env.machineId,
@@ -144,8 +144,8 @@ function handleConnectionStatusChange (data: { connectionStatus: string }): void
             ).then(choice => {
                 if (choice != null) {
                     // Selected to restart MATLAB
-                    telemetryLogger.sendEvent({
-                        eventKey: 'ML_VS_CODE_SETTING_ACTIONS',
+                    telemetryLogger.logEvent({
+                        eventKey: 'ML_VS_CODE_ACTIONS',
                         data: {
                             action_type: 'restartMATLAB',
                             result: ''
@@ -223,7 +223,7 @@ function handleFeatureUnavailableWithNoMatlab (): void {
 
 function handleTelemetryReceived (event: TelemetryEvent): void {
     event.eventKey = `ML_VS_CODE_${event.eventKey}`
-    telemetryLogger.sendEvent(event)
+    telemetryLogger.logEvent(event)
 }
 
 /**

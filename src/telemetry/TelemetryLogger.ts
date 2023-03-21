@@ -17,9 +17,9 @@ export interface TelemetryEvent {
 export default class TelemetryLogger {
     constructor (private readonly extensionVersion: string) {}
 
-    sendEvent (event: TelemetryEvent): void {
+    logEvent (event: TelemetryEvent): void {
         if (this.shouldLogTelemetry()) {
-            this.doSendEvent(event)
+            this.sendEvent(event)
         }
     }
 
@@ -28,7 +28,7 @@ export default class TelemetryLogger {
         return env.isTelemetryEnabled && (configuration.get<boolean>('telemetry') ?? true)
     }
 
-    private doSendEvent (event: TelemetryEvent): void {
+    private sendEvent (event: TelemetryEvent): void {
         const eventData = {
             logDDUXData: {
                 product: PRODUCT,
