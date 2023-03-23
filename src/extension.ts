@@ -76,8 +76,8 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
             module: serverModule,
             transport: TransportKind.ipc,
             options: {
-                // --inspect=6009: runs the server in Node's Inspector mode so VS Code can
-                // attach to the server for debugging
+                // --inspect=6009: runs the server in Node's Inspector mode so
+                // Visual Studio® Code can attach to the server for debugging
                 execArgv: ['--nolazy', '--inspect=6009']
             },
             args
@@ -109,7 +109,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
 }
 
 /**
- * Handles user input about whether to connect or disconnect from MATLAB
+ * Handles user input about whether to connect or disconnect from MATLAB®
  */
 function handleChangeMatlabConnection (): void {
     void vscode.window.showQuickPick(['Connect to MATLAB', 'Disconnect from MATLAB'], {
