@@ -1,4 +1,4 @@
-// Copyright 2022 - 2023 The MathWorks, Inc.
+ // Copyright 2022 - 2023 The MathWorks, Inc.
 
 import * as path from 'path'
 import * as vscode from 'vscode'
@@ -6,6 +6,7 @@ import {
     LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient/node'
 import NotificationConstants from './NotificationConstants'
+import TelemetryLogger, { TelemetryEvent } from './telemetry/TelemetryLogger'
 
 let client: LanguageClient
 
@@ -20,6 +21,8 @@ export const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 export let connectionStatusNotification: vscode.StatusBarItem
 
+let telemetryLogger: TelemetryLogger
+
 enum Notification {
     // Connection Status Updates
     MatlabConnectionClientUpdate = 'matlab/connection/update/client',
@@ -28,10 +31,25 @@ enum Notification {
     // Errors
     MatlabLaunchFailed = 'matlab/launchfailed',
     MatlabFeatureUnavailable = 'feature/needsmatlab',
-    MatlabFeatureUnavailableNoMatlab = 'feature/needsmatlab/nomatlab'
+    MatlabFeatureUnavailableNoMatlab = 'feature/needsmatlab/nomatlab',
+
+    // Telemetry
+    LogTelemetryData = 'telemetry/logdata'
 }
 
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
+    // Initialize telemetry logger
+    telemetryLogger = new TelemetryLogger(context.extension.packageJSON.version)
+    telemetryLogger.logEvent({
+        eventKey: 'ML_VS_CODE_ENVIRONMENT',
+        data: {
+            machine_hash: vscode.env.machineId,
+            locale: vscode.env.language,
+            os_platform: process.platform,
+            vs_code_version: vscode.version
+        }
+    })
+
     // Set up status bar indicator
     connectionStatusNotification = vscode.window.createStatusBarItem()
     connectionStatusNotification.text = CONNECTION_STATUS_LABELS.NOT_CONNECTED
@@ -85,6 +103,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     client.onNotification(Notification.MatlabLaunchFailed, () => handleMatlabLaunchFailed())
     client.onNotification(Notification.MatlabFeatureUnavailable, () => handleFeatureUnavailable())
     client.onNotification(Notification.MatlabFeatureUnavailableNoMatlab, () => handleFeatureUnavailableWithNoMatlab())
+    client.onNotification(Notification.LogTelemetryData, data => handleTelemetryReceived(data))
 
     await client.start()
 }
@@ -125,6 +144,13 @@ function handleConnectionStatusChange (data: { connectionStatus: string }): void
             ).then(choice => {
                 if (choice != null) {
                     // Selected to restart MATLAB
+                    telemetryLogger.logEvent({
+                        eventKey: 'ML_VS_CODE_ACTIONS',
+                        data: {
+                            action_type: 'restartMATLAB',
+                            result: ''
+                        }
+                    })
                     sendConnectionActionNotification('connect')
                 }
             }, reject => console.error(reject))
@@ -193,6 +219,11 @@ function handleFeatureUnavailableWithNoMatlab (): void {
                 break
         }
     }, reject => console.error(reject))
+}
+
+function handleTelemetryReceived (event: TelemetryEvent): void {
+    event.eventKey = `ML_VS_CODE_${event.eventKey}`
+    telemetryLogger.logEvent(event)
 }
 
 /**
