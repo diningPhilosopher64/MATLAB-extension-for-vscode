@@ -20,8 +20,8 @@ The extension provides several basic features, regardless of whether you have MA
 
 ### Advanced Features (requires MATLAB installed on your system)
 If you have MATLAB R2021a or later installed on your system, you have access to an additional set of advanced code-editing features. These features include:
-* Automatic code completions
-* Document formatting
+* Automatic code completion
+* Source code formatting (document formatting)
 * Code navigation
 * Code analysis, such as continuous code checking and automatic fixes
 
