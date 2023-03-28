@@ -33,34 +33,34 @@
 		"configuration": {
 			"title": "MATLAB",
 			"properties": {
-				"matlab.installPath": {
+				"MATLAB.installPath": {
 					"type": "string",
 					"markdownDescription": "The full path to the top-level directory of the MATLAB installation, e.g. `C:\\Program Files\\MATLAB\\R2022b` (Windows), `/Applications/MATLAB_R2022b.app` (Mac), or `/usr/local/MATLAB/R2022b` (Linux). If not specified, the environment path will be checked for the location of the `matlab` executable.",
 					"scope": "machine"
 				},
-				"matlab.matlabConnectionTiming": {
+				"MATLAB.matlabConnectionTiming": {
 					"type": "string",
-					"default": "early",
+					"default": "onStart",
 					"description": "When should MATLAB be launched",
 					"enum": [
-						"early",
-						"late",
+						"onStart",
+						"onDemand",
 						"never"
 					],
 					"enumDescriptions": [
-						"Launch MATLAB as early as possible",
-						"Launch MATLAB only when requested",
-						"Never attempt to launch MATLAB"
+						"Launch MATLAB as soon as a MATLAB code file is opened",
+						"Launch MATLAB only when needed for a given action",
+						"Never start MATLAB"
 					],
 					"scope": "window"
 				},
-				"matlab.indexWorkspace": {
+				"MATLAB.indexWorkspace": {
 					"type": "boolean",
 					"default": true,
 					"description": "Whether or not to index all .m files in the current workspace.",
 					"scope": "window"
 				},
-                "matlab.telemetry": {
+                "MATLAB.telemetry": {
                     "type": "boolean",
                     "default": true,
                     "description": "Whether or not product usage telemetry may be collected.",
