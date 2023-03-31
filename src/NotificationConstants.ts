@@ -7,7 +7,7 @@ export default {
         options: ['Restart MATLAB']
     },
     MATLAB_LAUNCH_FAILED: {
-        message: 'MATLAB failed to launch. If MATLAB is installed, confirm that the MATLAB executable path setting is properly configured.',
+        message: 'MATLAB was unable to start. If MATLAB is installed, confirm that the MATLAB executable path setting is properly configured.',
         options: ['Get MATLAB', 'Open Settings']
     },
     FEATURE_UNAVAILABLE: {

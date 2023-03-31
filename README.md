@@ -16,7 +16,7 @@ The extension provides several basic features, regardless of whether you have MA
 * Commenting
 * Code folding
 
-![MATLAB Extension Demo](.readme/BasicFeatures.gif)
+![MATLAB Extension Demo](public/BasicFeatures.gif)
 
 ### Advanced Features (requires MATLAB installed on your system)
 If you have MATLAB R2021a or later installed on your system, you have access to an additional set of advanced code-editing features. These features include:
@@ -25,7 +25,7 @@ If you have MATLAB R2021a or later installed on your system, you have access to 
 * Code navigation
 * Code analysis, such as continuous code checking and automatic fixes
 
-![MATLAB Extension Demo](.readme/AdvancedFeatures.gif)
+![MATLAB Extension Demo](public/AdvancedFeatures.gif)
 
 ## Configuration
 To configure the extension, go to the extension settings and select from the available options.
@@ -65,7 +65,7 @@ For more information, see the [MathWorks Privacy Policy](https://www.mathworks.c
 
 ## Troubleshooting
 If the MATLAB install path is not properly configured, you get an error when you try to use certain advanced features, such as document formatting and code navigation.
-![Install Path Error](.readme/installpatherror.png)
+![Install Path Error](public/installpatherror.png)
 
 To resolve the error, set the MATLAB install path to the location of the MATLAB executable. For more information, see the **Configuration > MATLAB Install Path Setting** section above.
 
