@@ -35,21 +35,21 @@
 			"properties": {
 				"MATLAB.installPath": {
 					"type": "string",
-					"markdownDescription": "The full path to the top-level directory of the MATLAB installation, e.g. `C:\\Program Files\\MATLAB\\R2022b` (Windows), `/Applications/MATLAB_R2022b.app` (Mac), or `/usr/local/MATLAB/R2022b` (Linux). If not specified, the environment path will be checked for the location of the `matlab` executable.",
+					"markdownDescription": "The full path to the top-level directory of the MATLAB installation you want to use with this extension. You can determine the full path to your MATLAB installation using the `matlabroot` command in MATLAB. For more information, refer to the README (TODO - Add Link).",
 					"scope": "machine"
 				},
 				"MATLAB.matlabConnectionTiming": {
 					"type": "string",
 					"default": "onStart",
-					"description": "When should MATLAB be launched",
+					"description": "Choose when this extension starts MATLAB in the background. Some functionality will be unavailable without MATLAB running in the background.",
 					"enum": [
 						"onStart",
 						"onDemand",
 						"never"
 					],
 					"enumDescriptions": [
-						"Launch MATLAB as soon as a MATLAB code file is opened",
-						"Launch MATLAB only when needed for a given action",
+						"Start MATLAB as soon as a MATLAB code file is opened",
+						"Start MATLAB when needed for a given action",
 						"Never start MATLAB"
 					],
 					"scope": "window"
@@ -57,13 +57,13 @@
 				"MATLAB.indexWorkspace": {
 					"type": "boolean",
 					"default": true,
-					"description": "Whether or not to index all .m files in the current workspace.",
+					"description": "Automatically index all MATLAB code files (.m) in the current workspace.",
 					"scope": "window"
 				},
                 "MATLAB.telemetry": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Whether or not product usage telemetry may be collected.",
+                    "markdownDescription": "Help improve this extension by sending user experience information to MathWorks. For more information, see the [MathWorks Privacy Policy](https://www.mathworks.com/company/aboutus/policies_statements.html).",
                     "scope": "window",
                     "tags": [
                         "telemetry",
