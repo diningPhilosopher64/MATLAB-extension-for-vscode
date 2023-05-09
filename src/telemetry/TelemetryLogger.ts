@@ -4,10 +4,11 @@ import fetch from 'node-fetch'
 import { env, workspace } from 'vscode'
 
 const PRODUCT = 'ML_VS_CODE'
-const APPLICATION_NAME = 'DESKTOP_MATLAB' // TODO: Replace with 'MATLAB_EXTENSION_FOR_VSCODE'
-const APPLICATION_KEY = 'd8c22ba3-fc0f-4beb-99fc-a109fe9abba9' // TODO: Replace with key for our application - this is the DESKTOP_MATLAB key
+const APPLICATION_NAME = 'MATLAB_EXTENSION_FOR_VSCODE'
+const APPLICATION_KEY = 'OWY3N2FkZTMtYWU1My00MjU3LThjZTktMzFmMTAyYjM0Njc5'
 
-const ENDPOINT = 'https://udc-service-integ3.mathworks.com/udc/service/v1/events' // TODO: Replace with production endpoint
+const ENDPOINT = 'https://udc-service-integ3.mathworks.com/udc/service/v1/events'
+// const ENDPOINT = 'https://udc-service.mathworks.com/udc/service/v1/events'
 
 export interface TelemetryEvent {
     eventKey: string
@@ -55,7 +56,7 @@ export default class TelemetryLogger {
                 'x-mw-udc-client-version': '1.0',
                 'x-mw-udc-application-name': APPLICATION_NAME,
                 'x-mw-udc-application-version': this.extensionVersion,
-                'x-mw-authentication': APPLICATION_KEY
+                'x-mw-authentication': Buffer.from(APPLICATION_KEY, 'base64').toString()
             },
             body: JSON.stringify(message)
         }).then(response => {

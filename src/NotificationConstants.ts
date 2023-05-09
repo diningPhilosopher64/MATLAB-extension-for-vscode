@@ -1,6 +1,5 @@
 // Copyright 2022 - 2023 The MathWorks, Inc.
 
-// TODO: Move strings to resources file (prep for l10n)
 export default {
     MATLAB_CLOSED: {
         message: 'MATLAB has been closed. Some functionality might be unavailable.',
