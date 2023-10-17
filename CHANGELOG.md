@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.4] - 2023-10-16
+
+### Added
+- Outline now includes section headers
+
+## [1.1.3] - 2023-09-13
+
+### Fixed
+- Fixed issue connecting to MATLAB with Visual Studio Code version 1.82 and later
+
+## [1.1.2] - 2023-08-14
+
+### Fixed
+
+- Patched CVE-2023-26136 and CVE-2022-25883
+- Added missing file icon for MATLAB files
+
+## [1.1.1] - 2023-07-10
+
+### Fixed
+
+- Diagnostic suppression should be placed at correct location when '%' is contained within string
+- Improved navigation to files inside MATLAB packages within the VS Code workspace but not on the MATLAB path
+- Prevented navigation to private/local functions from other files
+- MATLAB sign-in is no longer blocked on Windows
+
 ## [1.1.0] - 2023-06-05
 
 ### Added

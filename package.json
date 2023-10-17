@@ -4,7 +4,7 @@
 	"description": "Edit MATLAB code with syntax highlighting, linting, navigation support, and more",
 	"icon": "public/L-Membrane_RGB_128x128.png",
 	"license": "MIT",
-	"version": "1.1.0",
+	"version": "1.1.4",
 	"engines": {
 		"vscode": "^1.67.0"
 	},
@@ -82,7 +82,11 @@
 				"extensions": [
 					".m"
 				],
-				"configuration": "./language-configuration.json"
+				"configuration": "./language-configuration.json",
+                "icon": {
+                    "light": "./public/fileIcon_24x24.png",
+                    "dark": "./public/fileIcon_24x24.png"
+                }
 			}
 		],
 		"grammars": [
@@ -108,6 +112,7 @@
 		"lint": "eslint src --ext ts",
 		"lint:fix": "eslint src --ext ts --fix",
 		"test": "node ./out/test/runTest.js",
+		"test-insiders": "npm run pretest && node ./out/test/runTest.js --insiders",
 		"postinstall": "cd server && npm install && cd ..",
 		"package": "vsce package"
 	},

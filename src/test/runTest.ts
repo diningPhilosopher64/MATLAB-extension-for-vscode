@@ -3,11 +3,17 @@
 import * as path from 'path'
 import { runTests } from '@vscode/test-electron'
 import { GlobSync } from 'glob'
+import * as os from 'os'
 
 async function main (): Promise<void> {
     try {
         // Run the test against minimum supported and latest stable VS Code version
-        const versions = ['1.67.0', 'stable']
+        let versions = ['1.67.0', 'stable']
+
+        // If insiders argument is specified in CLI, run only against insiders version instead
+        if (process.argv.includes('--insiders')) {
+            versions = ['insiders']
+        }
 
         // The folder containing the Extension Manifest package.json
         // Passed to `--extensionDevelopmentPath`
@@ -28,7 +34,8 @@ async function main (): Promise<void> {
                     version,
                     extensionDevelopmentPath,
                     extensionTestsPath,
-                    extensionTestsEnv: { test }
+                    extensionTestsEnv: { test },
+                    launchArgs: ['--user-data-dir', `${os.tmpdir()}`]
                 })
             }
         }
