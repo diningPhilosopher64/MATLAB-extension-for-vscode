@@ -25,7 +25,7 @@ export default class TelemetryLogger {
     }
 
     private shouldLogTelemetry (): boolean {
-        const configuration = workspace.getConfiguration('matlab')
+        const configuration = workspace.getConfiguration('MATLAB')
         return env.isTelemetryEnabled && (configuration.get<boolean>('telemetry') ?? true)
     }
 
