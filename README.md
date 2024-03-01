@@ -88,8 +88,14 @@ We encourage all feedback. If you encounter a technical issue or have an enhance
 
 ## Release Notes
 
+### 1.2.0
+Release date: 2024-03-05
+
+Added:
+* Code execution support
+
 ### 1.1.0
-Release date: 2023-06-5
+Release date: 2023-06-05
 
 Added:
 * Document symbol and outline support

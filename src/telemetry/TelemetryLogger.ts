@@ -1,4 +1,4 @@
-// Copyright 2023 The MathWorks, Inc.
+// Copyright 2023-2024 The MathWorks, Inc.
 
 import fetch from 'node-fetch'
 import { env, workspace } from 'vscode'
