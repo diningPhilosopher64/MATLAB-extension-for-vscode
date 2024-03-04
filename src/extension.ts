@@ -13,6 +13,9 @@ import TerminalService from './commandwindow/TerminalService'
 import Notification from './Notifications'
 import ExecutionCommandProvider from './commandwindow/ExecutionCommandProvider'
 
+import {startServer, stopServer} from './licensing/server'
+import Licensing = require('./licensing')
+
 let client: LanguageClient
 
 const OPEN_SETTINGS_ACTION = 'workbench.action.openSettings'
@@ -31,6 +34,14 @@ let telemetryLogger: TelemetryLogger
 let mvm: MVM;
 let terminalService: TerminalService;
 let executionCommandProvider: ExecutionCommandProvider;
+
+// const staticFolderPath: string = path.join(__dirname, "licensing", "gui", "build")  
+const staticFolderPath: string = "/home/skondapa/work/VSCode_Integrations/matlab-vscode/src/licensing/gui/build"
+
+function openUrlInExternalBrowser(url: string): void {
+    console.log("Hello world")
+    vscode.env.openExternal(vscode.Uri.parse(url));
+}
 
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
     // Initialize telemetry logger
@@ -53,6 +64,24 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(connectionStatusNotification)
 
     context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_STATUS_COMMAND, () => handleChangeMatlabConnection()))
+
+    const url:string = startServer(staticFolderPath);
+    let licensing = new Licensing()
+	vscode.window.showInformationMessage("Started server successfully at ", url)
+
+    if(!licensing.isLicensed()){
+        vscode.window.showInformationMessage("Cached licensing not found! Opening browser");    
+
+        setTimeout(() => {
+            // openUrlInWebView(url);
+            openUrlInExternalBrowser(url);
+        }, 1000); 
+
+    } else {
+        vscode.window.showInformationMessage("Found cached licensing");    
+    }
+
+    
 
     // Set up langauge server
     const serverModule: string = context.asAbsolutePath(
@@ -269,6 +298,8 @@ export function sendConnectionActionNotification (connectionAction: 'connect' | 
 
 // this method is called when your extension is deactivated
 export async function deactivate (): Promise<void> {
+    stopServer()
+    vscode.window.showInformationMessage("Stopped server successfully")
     await client.stop()
     void client.dispose()
 }
