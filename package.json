@@ -48,6 +48,10 @@
 			{
 				"command": "matlab.interrupt",
 				"title": "MATLAB: Interrupt"
+			},
+			{
+				"command": "matlab.sigin",
+				"title": "MATLAB: Sign In"
 			}
 		],
 		"keybindings": [
@@ -65,7 +69,7 @@
 				"command": "matlab.interrupt",
 				"key": "Ctrl+C",
 				"mac": "Cmd+C",
-				"when": "((editorTextFocus && !editorHasSelection && editorLangId == matlab) || (terminalFocus && matlab.isActiveTerminal && !matlab.terminalHasSelection && !terminalTextSelectedInFocused)) " 
+				"when": "((editorTextFocus && !editorHasSelection && editorLangId == matlab) || (terminalFocus && matlab.isActiveTerminal && !matlab.terminalHasSelection && !terminalTextSelectedInFocused)) "
 			}
 		],
 		"menus": {
@@ -147,10 +151,10 @@
 					".m"
 				],
 				"configuration": "./language-configuration.json",
-                "icon": {
-                    "light": "./public/fileIcon_24x24.png",
-                    "dark": "./public/fileIcon_24x24.png"
-                }
+				"icon": {
+					"light": "./public/fileIcon_24x24.png",
+					"dark": "./public/fileIcon_24x24.png"
+				}
 			}
 		],
 		"grammars": [
@@ -209,6 +213,7 @@
 		"typescript": "^4.8.3"
 	},
 	"dependencies": {
+		"express": "^4.18.3",
 		"node-fetch": "^2.6.6",
 		"vscode-languageclient": "^8.0.2"
 	}
