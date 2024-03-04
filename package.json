@@ -50,8 +50,8 @@
 				"title": "MATLAB: Interrupt"
 			},
 			{
-				"command": "matlab.sigin",
-				"title": "MATLAB: Sign In"
+				"command": "matlab.licenseMatlab",
+				"title": "MATLAB: Sign in to your account"
 			}
 		],
 		"keybindings": [

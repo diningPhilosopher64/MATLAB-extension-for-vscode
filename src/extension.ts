@@ -3,7 +3,7 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {
-    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
+    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, integer
 } from 'vscode-languageclient/node'
 import NotificationConstants from './NotificationConstants'
 import TelemetryLogger, { TelemetryEvent } from './telemetry/TelemetryLogger'
@@ -29,6 +29,14 @@ export const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 export let connectionStatusNotification: vscode.StatusBarItem
 
+export const LICENSING_STATUS_LABELS = {       
+    UNLICENSED: 'MATLAB: Not Licensed',
+    LICENSED: 'MATLAB: Licensed',
+}
+const LICENSING_STATUS_COMMAND = 'matlab.licenseMatlab'
+export let licensingStatusNotification: vscode.StatusBarItem
+
+
 let telemetryLogger: TelemetryLogger
 
 let mvm: MVM;
@@ -37,10 +45,19 @@ let executionCommandProvider: ExecutionCommandProvider;
 
 // const staticFolderPath: string = path.join(__dirname, "licensing", "gui", "build")  
 const staticFolderPath: string = "/home/skondapa/work/VSCode_Integrations/matlab-vscode/src/licensing/gui/build"
+let url: string
+let licensing = new Licensing()
 
-function openUrlInExternalBrowser(url: string): void {
-    console.log("Hello world")
+function openUrlInExternalBrowser(url: string): void {   
     vscode.env.openExternal(vscode.Uri.parse(url));
+}
+
+async function sleep(ms: integer) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+function updateLicensingTextInStatusBar(){
+    licensingStatusNotification.text =  licensing.isLicensed() ? LICENSING_STATUS_LABELS.LICENSED : LICENSING_STATUS_LABELS.UNLICENSED
 }
 
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
@@ -65,8 +82,19 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
 
     context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_STATUS_COMMAND, () => handleChangeMatlabConnection()))
 
-    const url:string = startServer(staticFolderPath);
-    let licensing = new Licensing()
+    // Set up status bar indicator
+    // Licensing status
+    licensingStatusNotification = vscode.window.createStatusBarItem()
+    updateLicensingTextInStatusBar()
+    licensingStatusNotification.command = LICENSING_STATUS_COMMAND
+    licensingStatusNotification.show()
+    context.subscriptions.push(licensingStatusNotification)
+
+    context.subscriptions.push(vscode.commands.registerCommand(LICENSING_STATUS_COMMAND, () => handleChangeLicensing()))
+
+
+
+    url = startServer(staticFolderPath);    
 	vscode.window.showInformationMessage("Started server successfully at ", url)
 
     if(!licensing.isLicensed()){
@@ -75,7 +103,14 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
         setTimeout(() => {
             // openUrlInWebView(url);
             openUrlInExternalBrowser(url);
-        }, 1000); 
+        }, 1000);
+        
+        while(!licensing.isLicensed()){
+            await sleep(1000);
+            console.log("Sleeping for 1 second till licensing is done...")
+        }
+
+        updateLicensingTextInStatusBar()
 
     } else {
         vscode.window.showInformationMessage("Found cached licensing");    
@@ -162,6 +197,33 @@ function handleChangeMatlabConnection (): void {
         }
     })
 }
+
+function handleChangeLicensing (): void {
+    const unLicenseMatlab = "Unset Licensing or change licensing mode"
+    const licenseMatlab = "License MATLAB"
+    let arr = licensing.isLicensed() ? [unLicenseMatlab] : [licenseMatlab]
+    
+
+    void vscode.window.showQuickPick(arr, {
+        placeHolder: 'Change MATLAB Licensing'
+    }).then(choice => {
+        if (choice == null) {
+            return
+        }
+
+        if (choice === licenseMatlab) {
+            openUrlInExternalBrowser(url);
+
+        } else if (choice === unLicenseMatlab) {
+            licensing.unsetLicensing()
+            openUrlInExternalBrowser(url);
+        }
+
+        updateLicensingTextInStatusBar()
+    })
+
+} 
+
 
 /**
  * Handles the notifiaction that the connection to MATLAB has changed (either has connected,

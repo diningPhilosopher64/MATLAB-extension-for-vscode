@@ -74,6 +74,11 @@ function findAllByKey(obj, keyToFind) {
 }
 
 function marshalLicensingInfo(data){
+
+    if(!data || !('type' in data)){
+        return {}
+    }
+
     const type = data.type
     if(type == "mhlm") {
         return {
