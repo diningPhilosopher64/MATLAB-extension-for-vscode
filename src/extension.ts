@@ -3,8 +3,7 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {
-    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind, integer
-} from 'vscode-languageclient/node'
+    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node'
 import NotificationConstants from './NotificationConstants'
 import TelemetryLogger, { TelemetryEvent } from './telemetry/TelemetryLogger'
 import MVM from './commandwindow/MVM'
@@ -52,7 +51,7 @@ function openUrlInExternalBrowser(url: string): void {
     vscode.env.openExternal(vscode.Uri.parse(url));
 }
 
-async function sleep(ms: integer) {
+async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   
