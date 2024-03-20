@@ -242,11 +242,5 @@
 	"dependencies": {
 		"node-fetch": "^2.6.6",
 		"vscode-languageclient": "^8.0.2"
-	},
-	"__metadata": {
-		"id": "a41a2325-daf7-4cf4-beee-6c76190ad9fc",
-		"publisherDisplayName": "MathWorks",
-		"publisherId": "77ca8d5e-8b29-492a-8efb-4bd3de0c10c2",
-		"isPreReleaseVersion": false
 	}
 }
