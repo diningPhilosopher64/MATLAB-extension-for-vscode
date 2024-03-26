@@ -1,9 +1,8 @@
-// Copyright 2023 The MathWorks, Inc.
+// Copyright 2023-2024 The MathWorks, Inc.
 
 import * as path from 'path'
 import * as Mocha from 'mocha'
-import * as vs from '../tester/VSCodeTester'
-import * as os from 'os'
+import * as utils from './../tools/utils/VSCodeUtils'
 
 export async function run (): Promise<void> {
     // Create the mocha test
@@ -14,15 +13,14 @@ export async function run (): Promise<void> {
     })
 
     mocha.suite.beforeAll(async function () {
-        // if on a mac, try to find the matlab install path and update the settings
-        if (os.platform() === 'darwin') {
-            const installPath = await vs._getInstallPathForMac()
-            await vs.setInstallPath(installPath)
+        const MATLAB_PATH = process.env.MATLAB_PATH as string
+        if (MATLAB_PATH !== undefined) {
+            await utils.setInstallPath(MATLAB_PATH)
         }
     })
 
     mocha.suite.beforeEach(async function () {
-        await vs.closeAllDocuments()
+        await utils.closeAllDocuments()
     })
 
     const testsRoot = path.resolve(__dirname)
