@@ -9,7 +9,6 @@ const getEnvConfig = (req, res) => {
 res.send({"matlab":{"version": matlabVersion, "supportedVersions": supportedVersions}})
 };
 
-
 const getStatus = (req, res) => {    
     const status = {
         "matlab": {
@@ -41,6 +40,8 @@ const setLicensingInfo = async (req, res) => {
 
     return res.send(status)
 };
+
+// TODO: Add unsetLicensingInfo endpoint ?
 
 const fallbackEndpoint = (req, res) => {
     res.sendFile(path.join(__dirname + '/build/index.html'));

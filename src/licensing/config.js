@@ -4,6 +4,13 @@
 const os = require('os');
 const path = require('path');
 
+// ASK: Will the matlabVersion always be available ?
+// will the extension ensure that it knows the version on PATH ? 
+// If so:
+// 1) both matlabVersion and supportedVersions can be removed
+// 2) All the corresponding references in the frontend code can be removed
+// 3) env_config endpoint can be removed.
+
 // TODO: Need to pick up matlab version from matlab on path. Should convert this 
 // to a function which checks matlab executable on PATH.
 // If not found ask info from the user ? (will require further frontend changes) or Error out using 
