@@ -44,11 +44,7 @@ function App() {
     let dialog;    
     if (isConnectionError) {
         dialog = (
-            <Error
-                message="Either this integration terminated or the session ended"
-            >
-                <p>Attempt to <a href="../">return to a parent app</a></p>
-            </Error>
+            <Error message="Server unreachable"> </Error>
         );
     }    
 
@@ -95,10 +91,7 @@ function App() {
 
 
     return (
-        // If we use div instead of React.Fragment then the editor screen becomes white / doesn't fully render.
-        // Have noticed this behavior both in windows and Linux.
-        // If session dialog is not 'null' then render the transfer dialog or error dialog otherwise render the normal MATLAB.
-        <React.Fragment>
+         <React.Fragment>
                 <div data-testid="app" className="main">
                     {overlay}
                 </div>

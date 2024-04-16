@@ -41,6 +41,22 @@ const setLicensingInfo = async (req, res) => {
     return res.send(status)
 };
 
+const deleteLicensingInfo = async (req, res) => {    
+    await licensing.unsetLicensing()
+
+    const status = {
+        "matlab": {
+        "version": matlabVersion
+        },
+        "wsEnv": Licensing.wsEnvSuffix,
+        "error": null, 
+        "warnings": [],
+        "licensing": marshalLicensingInfo(licensing.data)
+    }
+
+    return res.send(status)
+};
+
 // TODO: Add unsetLicensingInfo endpoint ?
 
 const fallbackEndpoint = (req, res) => {
@@ -52,6 +68,7 @@ module.exports = {
     getEnvConfig,
     getStatus,
     setLicensingInfo,
+    deleteLicensingInfo,
     fallbackEndpoint
 }
 
