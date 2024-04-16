@@ -42,6 +42,9 @@ let mvm: MVM;
 let terminalService: TerminalService;
 let executionCommandProvider: ExecutionCommandProvider;
 
+// ASK: Update static folder path. 
+// In dev mode of the extension:  __dirname returns  /home/skondapa/work/VSCode_Integrations/matlab-vscode/out instead of ..../matlab-vscode. Is there any other approach
+// to get the path to current file correctly ?
 // const staticFolderPath: string = path.join(__dirname, "licensing", "gui", "build")  
 const staticFolderPath: string = "/home/skondapa/work/VSCode_Integrations/matlab-vscode/src/licensing/gui/build"
 let url: string

@@ -130,8 +130,9 @@ class Licensing {
         return false;
     }       
 
-    unsetLicensing() {
+    async unsetLicensing() {
         this.data = {}
+        await this.deleteCachedConfigFile()
     }
 
 
