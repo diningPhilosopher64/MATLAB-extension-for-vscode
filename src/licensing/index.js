@@ -1,4 +1,3 @@
-// import { licensingInfo } from './gui/src/reducers/index.js';
 const { matlabVersion, supportedVersions} = require('./config.js');
 const { fetchAccessToken, fetchExpandToken, fetchEntitlements } = require('./mw.js');
 const { writeJSONDataToFile, deleteFile, createDirectoryIfNotExist} = require('./util.js');
@@ -17,6 +16,13 @@ class Licensing {
 
     static mwiConfigFolderPath = path.join(os.homedir(), ".matlab", "MWI", "hosts", os.hostname())
     static mwiConfigFilePath = path.join(Licensing.mwiConfigFolderPath, "proxy_app_config.json")
+
+    static type = {
+        UNLICENSED: 'Not Licensed',
+        MHLM_LICENSE: 'Online License Manager',
+        NLM_LICENSE: 'Network License Manager',
+        EXISTING_LICENSE: 'Existing License',
+    }
 
     constructor() {
         if(Licensing.instance){
@@ -114,21 +120,67 @@ class Licensing {
     }
 
     isLicensed() {
-        if (this.data?.type) {
-            if (this.data.type === "nlm") {
-                if (this.data.conn_str) {
-                    return true;
-                }
-            } else if (this.data.type === "mhlm") {
-                if (this.data.identity_token && this.data.source_id && this.data.expiry && this.data.entitlement_id) {
-                    return true;
-                }
-            } else if (this.data.type === "existing_license") {
+        if (this.isMHLMLicensing() || this.isNLMLicensing() || this.isExistingLicensing()){
+            return true;
+        }
+        return false;
+    }
+
+    getMHLMEmailAddress() {
+        if(this.isMHLMLicensing()){
+            return this.data.email_addr;
+        }
+        return null;
+    }
+
+    isMHLMLicensing(){
+        if(this.data?.type === "mhlm"){
+            if (this.data.identity_token && this.data.source_id && this.data.expiry && this.data.entitlement_id) {
                 return true;
             }
         }
         return false;
-    }       
+    }
+
+    isNLMLicensing(){
+        if(this.data?.type === "nlm"){
+            if(this.data.conn_str){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isExistingLicensing(){
+        if (this.data?.type === "existing_license") {
+            return true;
+        }
+        return false;
+    }
+    
+    
+    getLicensingType() {
+        if (this.isNLMLicensing()) {
+            return Licensing.type.NLM_LICENSE;
+        } else if (this.isMHLMLicensing()) {
+            return Licensing.type.MHLM_LICENSE;
+        } else if (this.isExistingLicensing()) {
+            return Licensing.type.EXISTING_LICENSE;
+        }
+    }
+
+    getStatusNotificationLabel() {
+        const licensingType = this.getLicensingType();
+        let text = `MATLAB Licensing: ${licensingType}`
+        if(this.isMHLMLicensing()) {
+            return `${text}(${this.getMHLMEmailAddress()})`;
+        } else if(this.isNLMLicensing()){
+            return `${text}(${this.getNLMAddress()})`;
+        } else {
+            // For ExistingLicensing and UnLicensed cases
+            return text;
+        }
+    }
 
     async unsetLicensing() {
         this.data = {}

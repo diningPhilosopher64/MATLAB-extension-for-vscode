@@ -28,13 +28,8 @@ export const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 export let connectionStatusNotification: vscode.StatusBarItem
 
-export const LICENSING_STATUS_LABELS = {       
-    UNLICENSED: 'MATLAB: Not Licensed',
-    LICENSED: 'MATLAB: Licensed',
-}
 const LICENSING_STATUS_COMMAND = 'matlab.licenseMatlab'
 export let licensingStatusNotification: vscode.StatusBarItem
-
 
 let telemetryLogger: TelemetryLogger
 
@@ -50,6 +45,10 @@ const staticFolderPath: string = "/home/skondapa/work/VSCode_Integrations/matlab
 let url: string
 let licensing = new Licensing()
 
+const unLicenseMatlab = "Unset Licensing or change Licensing mode"
+const licenseMatlab = "License MATLAB"
+let arr = licensing.isLicensed() ? [unLicenseMatlab] : [licenseMatlab]
+
 function openUrlInExternalBrowser(url: string): void {   
     vscode.env.openExternal(vscode.Uri.parse(url));
 }
@@ -58,8 +57,19 @@ async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   
-function updateLicensingTextInStatusBar(){
-    licensingStatusNotification.text =  licensing.isLicensed() ? LICENSING_STATUS_LABELS.LICENSED : LICENSING_STATUS_LABELS.UNLICENSED
+function updateLicensingStatusNotificationBarText(){
+    licensingStatusNotification.text =  licensing.getStatusNotificationLabel()
+}
+
+function createLicensingStatusNotificationBarItem(){
+    // Set up status bar indicator
+    // Licensing status
+    licensingStatusNotification = vscode.window.createStatusBarItem()
+    updateLicensingStatusNotificationBarText()
+    licensingStatusNotification.command = LICENSING_STATUS_COMMAND
+    licensingStatusNotification.show()
+
+    return licensingStatusNotification    
 }
 
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
@@ -84,26 +94,19 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
 
     context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_STATUS_COMMAND, () => handleChangeMatlabConnection()))
 
-    // Set up status bar indicator
-    // Licensing status
-    licensingStatusNotification = vscode.window.createStatusBarItem()
-    updateLicensingTextInStatusBar()
-    licensingStatusNotification.command = LICENSING_STATUS_COMMAND
-    licensingStatusNotification.show()
+    const licensingStatusNotification = createLicensingStatusNotificationBarItem()
     context.subscriptions.push(licensingStatusNotification)
-
     context.subscriptions.push(vscode.commands.registerCommand(LICENSING_STATUS_COMMAND, () => handleChangeLicensing()))
-
 
 
     url = startServer(staticFolderPath);    
 	vscode.window.showInformationMessage("Started server successfully at ", url)
 
+    // POI: This is the code to trigger licensing workflow. Need to refactor it into a function appropriately.
     if(!licensing.isLicensed()){
         vscode.window.showInformationMessage("Cached licensing not found! Opening browser");    
 
         setTimeout(() => {
-            // openUrlInWebView(url);
             openUrlInExternalBrowser(url);
         }, 1000);
         
@@ -112,13 +115,11 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
             console.log("Sleeping for 1 second till licensing is done...")
         }
 
-        updateLicensingTextInStatusBar()
+        updateLicensingStatusNotificationBarText()
 
     } else {
         vscode.window.showInformationMessage("Found cached licensing");    
-    }
-
-    
+    }    
 
     // Set up langauge server
     const serverModule: string = context.asAbsolutePath(
@@ -201,11 +202,6 @@ function handleChangeMatlabConnection (): void {
 }
 
 function handleChangeLicensing (): void {
-    const unLicenseMatlab = "Unset Licensing or change licensing mode"
-    const licenseMatlab = "License MATLAB"
-    let arr = licensing.isLicensed() ? [unLicenseMatlab] : [licenseMatlab]
-    
-
     void vscode.window.showQuickPick(arr, {
         placeHolder: 'Change MATLAB Licensing'
     }).then(choice => {
@@ -221,7 +217,7 @@ function handleChangeLicensing (): void {
             openUrlInExternalBrowser(url);
         }
 
-        updateLicensingTextInStatusBar()
+        updateLicensingStatusNotificationBarText()
     })
 
 } 
