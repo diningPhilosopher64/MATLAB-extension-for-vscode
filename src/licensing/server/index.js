@@ -1,18 +1,15 @@
 const express = require('express');
 const { addRoutes } = require('./routes.js');
-let { url, port } = require('../config.js');
-const Licensing = require('../index.js')
+// const Licensing = require('../index.js')
 
 
 
-let server, licensing;
+let server, licensing, url, port;
 
 const startServer = (buildPath) => {    
     server = express()
     server.use(express.static(buildPath));
     server.use(express.json());
-
-    licensing = new Licensing()    
 
     // Add routes
     addRoutes(server);

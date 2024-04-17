@@ -42,7 +42,6 @@ let executionCommandProvider: ExecutionCommandProvider;
 // to get the path to current file correctly ?
 // const staticFolderPath: string = path.join(__dirname, "licensing", "gui", "build")  
 const staticFolderPath: string = "/home/skondapa/work/VSCode_Integrations/matlab-vscode/src/licensing/gui/build"
-let url: string
 let licensing = new Licensing()
 
 const unLicenseMatlab = "Unset Licensing or change Licensing mode"
@@ -99,7 +98,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(vscode.commands.registerCommand(LICENSING_STATUS_COMMAND, () => handleChangeLicensing()))
 
 
-    url = startServer(staticFolderPath);    
+    const url = startServer(staticFolderPath);    
 	vscode.window.showInformationMessage("Started server successfully at ", url)
 
     // POI: This is the code to trigger licensing workflow. Need to refactor it into a function appropriately.

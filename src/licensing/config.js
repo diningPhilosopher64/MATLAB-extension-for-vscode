@@ -1,9 +1,3 @@
-// import os from 'os';
-// import path from 'path';
-
-const os = require('os');
-const path = require('path');
-
 // ASK: Will the matlabVersion always be available ?
 // will the extension ensure that it knows the version on PATH ? 
 // If so:
@@ -22,13 +16,7 @@ const matlabVersion = "R2023a"
 // if there are multiple ?
 const supportedVersions = ["R2023a", "R2023b"]
 
-
-let port = null 
-let url = null;
-
 module.exports = {
-    port,
-    url,
     supportedVersions,
     matlabVersion
 }
