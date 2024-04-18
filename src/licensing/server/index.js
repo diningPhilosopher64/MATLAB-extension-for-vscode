@@ -1,10 +1,9 @@
 const express = require('express');
 const { addRoutes } = require('./routes.js');
-// const Licensing = require('../index.js')
 
 
 
-let server, licensing, url, port;
+let server, url, port;
 
 const startServer = (buildPath) => {    
     server = express()
@@ -31,6 +30,7 @@ const stopServer = () => {
 };
 
 module.exports = {
+  url,
 	startServer,
 	stopServer
 }

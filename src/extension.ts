@@ -54,7 +54,7 @@ function openUrlInExternalBrowser(url: string): void {
 
 async function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
+}
   
 function updateLicensingStatusNotificationBarText(){
     licensingStatusNotification.text =  licensing.getStatusNotificationLabel()
