@@ -3,7 +3,7 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {
-    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
+   LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient/node'
 import NotificationConstants from './NotificationConstants'
 import TelemetryLogger, { TelemetryEvent } from './telemetry/TelemetryLogger'
@@ -12,8 +12,9 @@ import { Notifier } from './commandwindow/Utilities'
 import TerminalService from './commandwindow/TerminalService'
 import Notification from './Notifications'
 import ExecutionCommandProvider from './commandwindow/ExecutionCommandProvider'
+import * as LicensingUtils from './utils/LicensingUtils'
 
-let client: LanguageClient
+let client : LanguageClient;
 
 const OPEN_SETTINGS_ACTION = 'workbench.action.openSettings'
 const MATLAB_INSTALL_PATH_SETTING = 'matlab.installPath'
@@ -32,7 +33,30 @@ let mvm: MVM;
 let terminalService: TerminalService;
 let executionCommandProvider: ExecutionCommandProvider;
 
+
+// Store a reference to configuration
+let configuration = vscode.workspace.getConfiguration('MATLAB');
+
+// Store a reference to the extension context to add / remove the status bar item on demand 
+let  vsCodeCtx : vscode.ExtensionContext;
+
+/**
+ * Listens for changes to the VS Code configuration and updates the licensing status bar item
+ * and listeners based on the 'triggerLicensingWorkflows' setting.
+ */
+const configChangeListener = vscode.workspace.onDidChangeConfiguration(() => {
+    configuration = vscode.workspace.getConfiguration('MATLAB')
+    if(configuration.get<boolean>('triggerLicensingWorkflows') ?? false){        
+        LicensingUtils.setupLicensingStatusBarItem(vsCodeCtx, client)
+        LicensingUtils.setupLicensingListeners(client)
+    } else {
+        LicensingUtils.removeLicensingStatusBarItem()
+        LicensingUtils.removeLicensingListeners()
+    }
+});
+
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
+    vsCodeCtx = context
     // Initialize telemetry logger
     telemetryLogger = new TelemetryLogger(context.extension.packageJSON.version)
     telemetryLogger.logEvent({
@@ -53,6 +77,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(connectionStatusNotification)
 
     context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_STATUS_COMMAND, () => handleChangeMatlabConnection()))
+    context.subscriptions.push(configChangeListener)    
 
     // Set up langauge server
     const serverModule: string = context.asAbsolutePath(
@@ -110,6 +135,13 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(vscode.commands.registerCommand('matlab.openCommandWindow', async () => await terminalService.openTerminalOrBringToFront()))
     context.subscriptions.push(vscode.commands.registerCommand('matlab.addToPath', async (uri: vscode.Uri) => await executionCommandProvider.handleAddToPath(uri)))
     context.subscriptions.push(vscode.commands.registerCommand('matlab.changeDirectory', async (uri: vscode.Uri) => await executionCommandProvider.handleChangeDirectory(uri)))
+    
+    // Create licensing status bar item and setup listeners only if licensing workflows are enabled.
+    // Any further changes to the configuration settings will be handled by configChangeListener.
+    if(configuration.get<boolean>('triggerLicensingWorkflows') ?? false){  
+        LicensingUtils.setupLicensingStatusBarItem(context, client)
+        LicensingUtils.setupLicensingListeners(client)
+    }
 
     await client.start()
 }

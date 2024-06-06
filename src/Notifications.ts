@@ -26,7 +26,13 @@ enum Notification {
     MVMStateChange = 'mvmStateChange',
 
     // Telemetry
-    LogTelemetryData = 'telemetry/logdata'
+    LogTelemetryData = 'telemetry/logdata',
+
+    // Licensing
+    LicensingServerUrl = 'licensing/server/url',
+    LicensingData = 'licensing/data',
+    LicensingDelete = 'licensing/delete',
+    LicensingError = 'licensing/error'
 }
 
 export default Notification

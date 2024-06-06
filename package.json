@@ -161,6 +161,12 @@
 						"telemetry",
 						"usesOnlineServices"
 					]
+				},
+				"MATLAB.triggerLicensingWorkflows": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Automatically trigger the licensing workflow when you open a MATLAB file. You can disable this feature if you do not want to be prompted to enter your MathWorks account credentials when you open a MATLAB file.",
+					"scope": "machine"
 				}
 			}
 		},
@@ -215,7 +221,7 @@
 		"test-smoke": "npm run test-setup && node ./out/test/smoke/runTest.js",
 		"test-ui": "npm run test-setup && node ./out/test/ui/runTest.js",
 		"test": "npm run test-smoke && npm run test-ui",
-		"postinstall": "cd server && npm install && cd ..",
+		"postinstall": "cd server && npm install && cd src/licensing/ && npm install && cd gui && npm install && cd ../../..",
 		"package": "vsce package"
 	},
 	"devDependencies": {
