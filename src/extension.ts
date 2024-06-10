@@ -27,7 +27,7 @@ export const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 export let connectionStatusNotification: vscode.StatusBarItem
 
-const ENABLE_MATLAB_LICESNING_COMMAND = "matlab.enableLicensing"
+const MATLAB_LICENSING_COMMAND = "matlab.licensing"
 
 let telemetryLogger: TelemetryLogger
 
@@ -139,7 +139,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(vscode.commands.registerCommand('matlab.changeDirectory', async (uri: vscode.Uri) => await executionCommandProvider.handleChangeDirectory(uri)))
     
     // Register a custom command which lets the user know about this option in settings    
-    context.subscriptions.push(vscode.commands.registerCommand('matlab.enableLicensing', async () => await handleEnableMatlabLicensing(context)))
+    context.subscriptions.push(vscode.commands.registerCommand(MATLAB_LICENSING_COMMAND, async () => await handleEnableMatlabLicensing(context)))
 
 
     
@@ -164,13 +164,26 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
  * @returns {Promise<void>} A promise that resolves when the operation is complete.
  */
 async function handleEnableMatlabLicensing(context: vscode.ExtensionContext) { 
-    // Enable the 'triggerLicensingWorkflows' setting if not already enabled and show a message
-    if(!configuration.get('triggerLicensingWorkflows')){
-        await configuration.update('triggerLicensingWorkflows', true, vscode.ConfigurationTarget.Global);
-        vscode.window.showInformationMessage(`Licensing workflows have been enabled.`)
-    } else {
-        vscode.window.showInformationMessage(`Licensing workflows are already enabled.`)
+    const choice = await vscode.window.showQuickPick(['Enable MATLAB Licensing', 'Disable MATLAB Licensing'],{
+        placeHolder: 'Enable or Disable Licensing'
+    })
+
+    if(choice == null){
+        return
     }
+
+    if (choice === 'Enable MATLAB Licensing') {
+        // Enable the 'triggerLicensingWorkflows' setting if not already enabled and show a message
+        if(!configuration.get('triggerLicensingWorkflows')){
+            await configuration.update('triggerLicensingWorkflows', true, vscode.ConfigurationTarget.Global);
+            vscode.window.showInformationMessage(`Licensing workflows have been enabled.`)
+        } else {
+            vscode.window.showInformationMessage(`Licensing workflows are already enabled.`)
+        }
+    } else if (choice === 'Disable MATLAB Licensing'){
+        await configuration.update('triggerLicensingWorkflows', false, vscode.ConfigurationTarget.Global);
+        vscode.window.showInformationMessage(`Licensing workflows have been disabled.`)
+    }    
 }
 
 /**
