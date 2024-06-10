@@ -56,6 +56,10 @@
 			{
 				"command": "matlab.changeDirectory",
 				"title": "MATLAB: Change current directory"
+			},
+			{
+				"command": "matlab.enableLicensing",
+				"title": "MATLAB: Enable MATLAB Licensing"
 			}
 		],
 		"keybindings": [
