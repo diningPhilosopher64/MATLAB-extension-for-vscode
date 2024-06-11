@@ -59,7 +59,7 @@
 			},
 			{
 				"command": "matlab.licensing",
-				"title": "MATLAB: Enable or Disable Licensing"
+				"title": "MATLAB: Enable or Disable Online Licensing"
 			}
 		],
 		"keybindings": [
@@ -166,10 +166,10 @@
 						"usesOnlineServices"
 					]
 				},
-				"MATLAB.triggerLicensingWorkflows": {
+				"MATLAB.enableOnlineLicensing": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "Automatically trigger the licensing workflow when you open a MATLAB file. You can disable this feature if you do not want to be prompted to enter your MathWorks account credentials when you open a MATLAB file.",
+					"markdownDescription": "Enable this option to use Online Licensing or Network License Manager to license an unactivated MATLAB installation",
 					"scope": "machine"
 				}
 			}
