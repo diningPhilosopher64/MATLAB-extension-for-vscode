@@ -166,7 +166,7 @@
 						"usesOnlineServices"
 					]
 				},
-				"MATLAB.enableOnlineLicensing": {
+				"MATLAB.useOnlineLicensing": {
 					"type": "boolean",
 					"default": false,
 					"markdownDescription": "Enable this option to use Online Licensing or Network License Manager to license an unactivated MATLAB installation",

@@ -3,7 +3,7 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {
-   LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
+    LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient/node'
 import NotificationConstants from './NotificationConstants'
 import TelemetryLogger, { TelemetryEvent } from './telemetry/TelemetryLogger'
@@ -14,7 +14,7 @@ import Notification from './Notifications'
 import ExecutionCommandProvider from './commandwindow/ExecutionCommandProvider'
 import * as LicensingUtils from './utils/LicensingUtils'
 
-let client : LanguageClient;
+let client: LanguageClient
 
 const OPEN_SETTINGS_ACTION = 'workbench.action.openSettings'
 const MATLAB_INSTALL_PATH_SETTING = 'matlab.installPath'
@@ -35,32 +35,10 @@ let mvm: MVM;
 let terminalService: TerminalService;
 let executionCommandProvider: ExecutionCommandProvider;
 
-
 // Store a reference to configuration
 let configuration = vscode.workspace.getConfiguration('MATLAB');
 
-// Store a reference to the extension context to add / remove the status bar item on demand 
-let  vsCodeCtx : vscode.ExtensionContext;
-
-/**
- * Listens for changes to the VS Code configuration and executes corresponding 
- * functions for specific settings.
- */
-const configChangeListener = vscode.workspace.onDidChangeConfiguration(() => {
-    configuration = vscode.workspace.getConfiguration('MATLAB')
-    
-    // Updates the licensing status bar item and listeners based on the 'enableOnlineLicensing' setting.
-    if(configuration.get<boolean>('enableOnlineLicensing') ?? false){        
-        LicensingUtils.setupLicensingStatusBarItem(vsCodeCtx, client)
-        LicensingUtils.setupLicensingListeners(client)
-    } else {
-        LicensingUtils.removeLicensingStatusBarItem()
-        LicensingUtils.removeLicensingListeners()
-    }
-});
-
 export async function activate (context: vscode.ExtensionContext): Promise<void> {
-    vsCodeCtx = context
     // Initialize telemetry logger
     telemetryLogger = new TelemetryLogger(context.extension.packageJSON.version)
     telemetryLogger.logEvent({
@@ -81,7 +59,20 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(connectionStatusNotification)
 
     context.subscriptions.push(vscode.commands.registerCommand(CONNECTION_STATUS_COMMAND, () => handleChangeMatlabConnection()))
-    context.subscriptions.push(configChangeListener)    
+
+    // Event handler when VSCode configuration is changed by the user and executes corresponding functions for specific settings.
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
+        configuration = vscode.workspace.getConfiguration('MATLAB')
+        
+        // Updates the licensing status bar item and listeners based on the 'useOnlineLicensing' setting.
+        if(configuration.get<boolean>('useOnlineLicensing')){        
+            LicensingUtils.setupLicensingStatusBarItem(context, client)
+            LicensingUtils.setupLicensingListeners(client)
+        } else {
+            LicensingUtils.removeLicensingStatusBarItem()
+            LicensingUtils.removeLicensingListeners()
+        }
+    }))
 
     // Set up langauge server
     const serverModule: string = context.asAbsolutePath(
@@ -147,7 +138,7 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     
     // Create licensing status bar item and setup listeners only if licensing workflows are enabled.
     // Any further changes to the configuration settings will be handled by configChangeListener.
-    if(configuration.get('enableOnlineLicensing')){  
+    if(configuration.get('useOnlineLicensing')){  
         LicensingUtils.setupLicensingStatusBarItem(context, client)
         LicensingUtils.setupLicensingListeners(client)
     }
@@ -158,11 +149,11 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
 /**
  * Handles enabling MATLAB licensing workflows.
  * 
- * Checks if the `enableOnlineLicensing` setting is enabled. If it is not enabled, 
+ * Checks if the `useOnlineLicensing` setting is enabled. If it is not enabled, 
  * updates the setting to enable it and displays a message indicating the workflows 
  * have been enabled. If it is already enabled, displays a message indicating that.
  * 
- * @param {vscode.ExtensionContext} context - The context in which the extension is running.
+ * @param context - The context in which the extension is running.
  * @returns {Promise<void>} A promise that resolves when the operation is complete.
  */
 async function handleOnlineLicensing(context: vscode.ExtensionContext) { 
@@ -175,16 +166,16 @@ async function handleOnlineLicensing(context: vscode.ExtensionContext) {
     }
 
     if (choice === 'Enable MATLAB Licensing') {
-        // Enable the 'enableOnlineLicensing' setting if not already enabled and show a message
-        if(!configuration.get('enableOnlineLicensing')){
-            await configuration.update('enableOnlineLicensing', true, vscode.ConfigurationTarget.Global);
-            vscode.window.showInformationMessage(`Licensing workflows have been enabled.`)
+        // Enable the 'useOnlineLicensing' setting if not already enabled and show a message
+        if(!configuration.get('useOnlineLicensing')){
+            await configuration.update('useOnlineLicensing', true, vscode.ConfigurationTarget.Workspace);
+            vscode.window.showInformationMessage(`Online Licensing has been enabled.`)
         } else {
-            vscode.window.showInformationMessage(`Licensing workflows are already enabled.`)
+            vscode.window.showInformationMessage(`Online Licensing is already enabled.`)
         }
     } else if (choice === 'Disable MATLAB Licensing'){
-        await configuration.update('enableOnlineLicensing', false, vscode.ConfigurationTarget.Global);
-        vscode.window.showInformationMessage(`Licensing workflows have been disabled.`)
+        await configuration.update('useOnlineLicensing', false, vscode.ConfigurationTarget.Workspace);
+        vscode.window.showInformationMessage(`Online Licensing has been disabled.`)
     }    
 }
 

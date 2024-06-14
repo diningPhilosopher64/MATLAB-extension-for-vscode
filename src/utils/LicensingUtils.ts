@@ -17,8 +17,8 @@ const LICENSING_STATUS_COMMAND = 'matlab.licenseMatlab'
 /**
  * Sets up the licensing status bar item and associated commands in the extension context.
  * 
- * @param {vscode.ExtensionContext} context - The extension context.
- * @param {LanguageClient} client - The language client instance.
+ * @param context - The extension context.
+ * @param client - The language client instance.
  */
 export function setupLicensingStatusBarItem(context: vscode.ExtensionContext, client: LanguageClient) : void {  
     if(!licensingStatusBarItem){
@@ -52,7 +52,7 @@ export function removeLicensingStatusBarItem() : void {
 /**
  * Sets up the licensing notification listeners for the extension.
  * 
- * @param {LanguageClient} client - The language client instance.
+ * @param client - The language client instance.
  */
 export function setupLicensingListeners(client: LanguageClient) : void {
     if(!licensingUrlNotificationListener){
@@ -92,7 +92,7 @@ export function removeLicensingListeners() : void  {
 /**
  * Handles the licensing change or delete actions based on the user's choice.
  * 
- * @param {LanguageClient} client - The language client instance.
+ * @param client - The language client instance.
  */
 function handleChangeLicensing (client: LanguageClient): void {
     void vscode.window.showQuickPick(['Change MATLAB Licensing', 'Delete MATLAB Licensing'], {
@@ -114,7 +114,7 @@ function handleChangeLicensing (client: LanguageClient): void {
 /**
  * Handles the licensing error notification by displaying an information message.
  * 
- * @param {string} data - The error message data.
+ * @param data - The error message data.
  */
 function handleLicensingError(data: string): void {
     vscode.window.showInformationMessage(`Licensing failed with error: ${data}`)
@@ -123,7 +123,7 @@ function handleLicensingError(data: string): void {
 /**
  * Handles the licensing data notification by updating the licensing status bar item.
  * 
- * @param {string} data - The licensing data.
+ * @param data - The licensing data.
  */
 function handleChangeLicensingData(data: string) : void {
     if (licensingStatusBarItem){   

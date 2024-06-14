@@ -5,7 +5,7 @@ import * as vscode from 'vscode'
 /**
  * Opens the provided URL in an external browser.
  * If the URL fails to open in the browser, it renders the URL inside a VS Code webview panel.
- * @param {string} url - The URL to open.
+ * @param url - The URL to open.
  * @returns {Promise<void>} A Promise that resolves when the URL is opened or rendered.
  */
 export async function openUrlInExternalBrowser(url: string): Promise<void> {   
