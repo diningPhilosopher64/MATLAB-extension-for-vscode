@@ -27,7 +27,7 @@ export const CONNECTION_STATUS_LABELS = {
 const CONNECTION_STATUS_COMMAND = 'matlab.changeMatlabConnection'
 export let connectionStatusNotification: vscode.StatusBarItem
 
-const MATLAB_ONLINE_LICENSING_COMMAND = "matlab.ChangeOnlineLicensing"
+const MATLAB_ONLINE_LICENSING_COMMAND = "matlab.changeOnlineLicensing"
 
 let telemetryLogger: TelemetryLogger
 
@@ -131,9 +131,8 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
     context.subscriptions.push(vscode.commands.registerCommand('matlab.addToPath', async (uri: vscode.Uri) => await executionCommandProvider.handleAddToPath(uri)))
     context.subscriptions.push(vscode.commands.registerCommand('matlab.changeDirectory', async (uri: vscode.Uri) => await executionCommandProvider.handleChangeDirectory(uri)))
     
-    // Register a custom command which lets the user know about this option in settings    
+    // Register a custom command which lets the user know about the Online Licensing option in settings    
     context.subscriptions.push(vscode.commands.registerCommand(MATLAB_ONLINE_LICENSING_COMMAND, async () => await handleOnlineLicensing(context)))
-
 
     
     // Create licensing status bar item and setup listeners only if licensing workflows are enabled.
@@ -157,25 +156,20 @@ export async function activate (context: vscode.ExtensionContext): Promise<void>
  * @returns {Promise<void>} A promise that resolves when the operation is complete.
  */
 async function handleOnlineLicensing(context: vscode.ExtensionContext) { 
-    const choice = await vscode.window.showQuickPick(['Enable MATLAB Licensing', 'Disable MATLAB Licensing'],{
-        placeHolder: 'Enable or Disable Online Licensing'
+    const choice = await vscode.window.showQuickPick(['Enable Online Licensing', 'Disable Online Licensing'],{
+        placeHolder: 'Manage Online Licensing'
     })
 
     if(choice == null){
         return
     }
 
-    if (choice === 'Enable MATLAB Licensing') {
-        // Enable the 'useOnlineLicensing' setting if not already enabled and show a message
-        if(!configuration.get('useOnlineLicensing')){
-            await configuration.update('useOnlineLicensing', true, vscode.ConfigurationTarget.Workspace);
-            vscode.window.showInformationMessage(`Online Licensing has been enabled.`)
-        } else {
-            vscode.window.showInformationMessage(`Online Licensing is already enabled.`)
-        }
-    } else if (choice === 'Disable MATLAB Licensing'){
-        await configuration.update('useOnlineLicensing', false, vscode.ConfigurationTarget.Workspace);
-        vscode.window.showInformationMessage(`Online Licensing has been disabled.`)
+    if (choice === 'Enable Online Licensing') {        
+        await configuration.update('useOnlineLicensing', true, vscode.ConfigurationTarget.Global);
+        vscode.window.showInformationMessage(`Online Licensing enabled.`)       
+    } else if (choice === 'Disable Online Licensing'){        
+        await configuration.update('useOnlineLicensing', false, vscode.ConfigurationTarget.Global);
+        vscode.window.showInformationMessage(`Online Licensing disabled.`)             
     }    
 }
 

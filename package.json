@@ -58,8 +58,8 @@
 				"title": "MATLAB: Change current directory"
 			},
 			{
-				"command": "matlab.licensing",
-				"title": "MATLAB: Enable or Disable Online Licensing"
+				"command": "matlab.changeOnlineLicensing",
+				"title": "MATLAB: Manage Online Licensing"
 			}
 		],
 		"keybindings": [
